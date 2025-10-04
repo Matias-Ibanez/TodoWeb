@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container col-lg-8 col-xl-6 px-3 py-3">
+        <div class="row align-items-center g-4 py-3">
+            <div class="col-md-10 mx-auto col-lg-6">
+                <form class="p-3 border rounded-3 bg-light" method="POST" action="" novalidate>
+                    {{ form.hidden_tag() }}
+
+                    <div class="form-floating mb-2">
+                        {{ form.username(class="form-control", id="floatingName") }}
+                        {{ form.username.label(for="floatingName") }}
+                        {% for error in form.username.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}
+                    </div>
+
+                    <div class="form-floating mb-2">
+                        {{ form.password(class="form-control", id="floatingPassword") }}
+                        {{ form.password.label(for="floatingPassword") }}
+                        {% for error in form.password.errors %}
+                            <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}
+                    </div>
+
+                    <div class="form-check">
+                        {{ form.remember_me(class="form-check-input", type="checkbox") }}
+                        {{ form.remember_me.label }}
+                    </div>
+
+                    {{ form.submit(class="w-100 btn btn-sm btn-primary", type="submit") }}
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
