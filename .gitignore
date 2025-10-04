@@ -5,7 +5,6 @@ env/
 
 # Archivos de configuración local
 .idea/
-.vscode/
 
 # Caché de Python
 __pycache__/
