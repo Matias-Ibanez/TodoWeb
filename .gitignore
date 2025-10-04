@@ -1,0 +1,33 @@
+# Entornos virtuales
+venv/
+env/
+.flaskenv
+
+# Archivos de configuración local
+.idea/
+.vscode/
+
+# Caché de Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de entorno
+.env
+
+# Archivos de logs o temporales
+*.log
+*.pot
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+
+# Compilación y distribución
+build/
+dist/
+*.egg-info/
