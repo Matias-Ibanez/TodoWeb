@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="mb-4">Choose a Due Date</h2>
+
+    <form method="POST">
+        {{ form.hidden_tag() }}
+
+        <div class="mb-3">
+            <label for="due_date" class="form-label">{{ form.due_date.label }}</label>
+            {{ form.due_date(class="form-control", type="date") }}
+
+            {% for error in form.due_date.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Continue</button>
+    </form>
+</div>
+{% endblock %}
+

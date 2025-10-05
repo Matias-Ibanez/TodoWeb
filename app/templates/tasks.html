@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Hi {{ current_user.username }}! These are your tasks</h2>
+        <a href="{{ url_for('views.create_task', date=date_today|string) }}" class="btn btn-success">
+            + Add New Task
+        </a>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="GET" class="mb-4">
+        <div class="d-flex justify-content-between align-items-center">
+            <label for="sort" class="form-label me-2">Sort by:</label>
+            <select name="sort" id="sort" class="form-select w-auto" onchange="this.form.submit()">
+                <option value="recent" {% if sort == 'recent' %}selected{% endif %}>Recently Added</option>
+                <option value="due" {% if sort == 'due' %}selected{% endif %}>Due Soon</option>
+            </select>
+        </div>
+    </form>
+
+    {% if tasks %}
+        <div class="row row-cols-1 row-cols-md-2 g-4 mb-4">
+            {% for task in tasks %}
+                <div class="col">
+                    <div class="card border-0 shadow h-100">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">{{ task.title }}</h5>
+                        </div>
+                        <div class="card-body bg-light">
+                            <div class="mb-2">
+                                <span class="fw-semibold text-secondary">📅 Due Date:</span>
+                                {{ task.due_date.strftime('%Y-%m-%d') }}
+                            </div>
+                            <div class="p-2 rounded bg-white border">
+                                <span class="fw-semibold text-secondary">⏰ Time:</span>
+                                {{ task.start_time.strftime('%H:%M') }} – {{ task.finish_time.strftime('%H:%M') }}
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white border-top text-end">
+                            <a href="#" class="btn btn-sm btn-outline-primary">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                {% if pagination.has_prev %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('views.tasks', page=pagination.prev_num, sort=sort) }}">Previous</a>
+                    </li>
+                {% endif %}
+                {% for p in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                    {% if p %}
+                        <li class="page-item {% if p == pagination.page %}active{% endif %}">
+                            <a class="page-link" href="{{ url_for('views.tasks', page=p, sort=sort) }}">{{ p }}</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">…</span></li>
+                    {% endif %}
+                {% endfor %}
+                {% if pagination.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('views.tasks', page=pagination.next_num, sort=sort) }}">Next</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% else %}
+        <div class="alert alert-secondary mt-4">
+            No tasks found.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

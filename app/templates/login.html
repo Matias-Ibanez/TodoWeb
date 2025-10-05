@@ -4,6 +4,18 @@
     <div class="container col-lg-8 col-xl-6 px-3 py-3">
         <div class="row align-items-center g-4 py-3">
             <div class="col-md-10 mx-auto col-lg-6">
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
                 <form class="p-3 border rounded-3 bg-light" method="POST" action="" novalidate>
                     {{ form.hidden_tag() }}
 
@@ -11,7 +23,7 @@
                         {{ form.username(class="form-control", id="floatingName") }}
                         {{ form.username.label(for="floatingName") }}
                         {% for error in form.username.errors %}
-                        <span style="color: red;">[{{ error }}]</span>
+                            <span style="color: red;">[{{ error }}]</span>
                         {% endfor %}
                     </div>
 
@@ -29,6 +41,8 @@
                     </div>
 
                     {{ form.submit(class="w-100 btn btn-sm btn-primary", type="submit") }}
+
+                  <p>New User? <a href="{{ url_for('auth.register') }}">Click to Register!</a></p>
                 </form>
             </div>
         </div>

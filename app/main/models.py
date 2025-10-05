@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import datetime, timezone, time, date
 import sqlalchemy as sa
 import sqlalchemy.orm as so
 from app.extensions import db
@@ -24,6 +24,21 @@ class Task(db.Model):
     user_id : so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id))
     title : so.Mapped[str] = so.mapped_column(sa.String(128))
     description : so.Mapped[str] = so.mapped_column(sa.String(256))
-    completed : so.Mapped[bool] = so.mapped_column(sa.Boolean)
+    completed : so.Mapped[bool] = so.mapped_column(sa.Boolean, default=False)
     created_at: so.Mapped[datetime] = so.mapped_column(default=lambda: datetime.now(timezone.utc))
+    due_date: so.Mapped[date] = so.mapped_column(sa.Date)
+    start_time : so.Mapped[time] = so.mapped_column(sa.Time)
+    finish_time : so.Mapped[time] = so.mapped_column(sa.Time)
+
+    def is_overdue(self) -> bool:
+        return self.due_date and not self.completed and datetime.utcnow() > self.due_date
+
+    @property
+    def time_until_due(self):
+        now = datetime.now()
+        due_datetime = datetime.combine(self.due_date, self.finish_time)
+        return due_datetime - now
+
+
+
 

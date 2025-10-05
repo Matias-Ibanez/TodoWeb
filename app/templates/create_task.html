@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="mb-4">Create New Task</h2>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    {% if selected_date %}
+        <div class="alert alert-info">
+            Selected date: <strong>{{ selected_date }}</strong>
+        </div>
+    {% endif %}
+
+    <form method="POST" novalidate>
+        {{ form.hidden_tag() }}
+
+        <div class="mb-3">
+            <label for="title" class="form-label">{{ form.title.label }}</label>
+            {{ form.title(class="form-control") }}
+            {% for error in form.title.errors %}
+                <div class="invalid-feedback d-block">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="mb-3">
+            <label for="description" class="form-label">{{ form.description.label }}</label>
+            {{ form.description(class="form-control") }}
+            {% for error in form.description.errors %}
+                <div class="invalid-feedback d-block">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="start_time" class="form-label">{{ form.start_time.label }}</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-clock"></i></span>
+                    {{ form.start_time(class="form-control", type="time") }}
+                </div>
+                <div class="form-text">Start time (24h format)</div>
+                {% for error in form.start_time.errors %}
+                    <div class="invalid-feedback d-block">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="col-md-6">
+                <label for="finish_time" class="form-label">{{ form.finish_time.label }}</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-clock"></i></span>
+                    {{ form.finish_time(class="form-control", type="time") }}
+                </div>
+                <div class="form-text">End time (must be after start)</div>
+                {% for error in form.finish_time.errors %}
+                    <div class="invalid-feedback d-block">{{ error }}</div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-success">Create Task</button>
+    </form>
+</div>
+{% endblock %}
