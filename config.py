@@ -7,7 +7,8 @@ print(basedir)
 
 class Config:
     SECRET_KEY = os.getenv("SECRET_KEY") or 'you-will-never-guess'
-    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL") or \
-    'sqlite:///' + os.path.join(basedir, 'app.db')
+    instance_path = os.path.join(basedir, 'instance')
+    db_path = os.path.join(instance_path, 'app.db')
+    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL") or f"sqlite:///{db_path}"
     TASKS_PER_PAGE = 4
 

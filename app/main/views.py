@@ -11,7 +11,7 @@ views = Blueprint('views', __name__)
 @views.route('/')
 @views.route('/home')
 def index():
-    return render_template('index.html')
+    return render_template('home.html')
 
 @views.route('/select-date', methods=['GET', 'POST'])
 def select_date():
@@ -70,9 +70,9 @@ def tasks():
     page = request.args.get("page", 1, type=int)
     sort = request.args.get("sort", "recent")
 
-    all_tasks = Task.query.filter_by(user_id=current_user.id, completed=False).all()
+    all_tasks = Task.query.filter_by(user_id=current_user.id).all()
     for task in all_tasks:
-        task.overdue = task.is_overdue
+        task.overdue = task.is_overdue()
     db.session.commit()
 
     query = Task.query.filter_by(user_id=current_user.id)
@@ -94,3 +94,11 @@ def tasks():
 def task(id):
     task = Task.query.get_or_404(id)
     return render_template('task.html', task=task)
+
+@views.route('/task/delete/<int:id>', methods=['GET', 'POST'])
+def delete_task(id):
+    task = Task.query.get_or_404(id)
+    flash('Task deleted', 'info')
+    db.session.delete(task)
+    db.session.commit()
+    return redirect(url_for('views.tasks'))

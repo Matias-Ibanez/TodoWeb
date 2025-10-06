@@ -32,7 +32,10 @@ class Task(db.Model):
     finish_time : so.Mapped[time] = so.mapped_column(sa.Time)
 
     def is_overdue(self) -> bool:
-        return self.due_date and not self.completed and datetime.utcnow() > self.due_date
+        if not self.due_date or not self.finish_time or self.completed:
+            return False
+        deadline = datetime.combine(self.due_date, self.finish_time)
+        return datetime.utcnow() > deadline
 
     @property
     def time_until_due(self):
