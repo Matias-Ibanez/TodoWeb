@@ -68,10 +68,29 @@ def create_task():
 @login_required
 def tasks():
     page = request.args.get("page", 1, type=int)
+    sort = request.args.get("sort", "recent")
+
+    all_tasks = Task.query.filter_by(user_id=current_user.id, completed=False).all()
+    for task in all_tasks:
+        task.overdue = task.is_overdue
+    db.session.commit()
+
     query = Task.query.filter_by(user_id=current_user.id)
+
+    if sort == "recent":
+        query = query.order_by(Task.created_at.desc())
+    elif sort == "due":
+        query = query.order_by(Task.due_date.asc(), Task.start_time.asc())
+
     pagination = query.order_by(Task.created_at.desc()).paginate(
         page=page,
         per_page=current_app.config["TASKS_PER_PAGE"],
         error_out=False
     )
     return render_template("tasks.html", tasks=pagination.items, pagination=pagination, title="Tasks")
+
+@views.route('/task/<int:id>', methods=['GET', 'POST'])
+@login_required
+def task(id):
+    task = Task.query.get_or_404(id)
+    return render_template('task.html', task=task)

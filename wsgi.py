@@ -2,6 +2,7 @@ from app import create_app
 import sqlalchemy as sa
 import sqlalchemy.orm as so
 from app.main.models import User, Task
+from app.extensions import db
 
 app = create_app()
 

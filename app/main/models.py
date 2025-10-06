@@ -27,6 +27,7 @@ class Task(db.Model):
     completed : so.Mapped[bool] = so.mapped_column(sa.Boolean, default=False)
     created_at: so.Mapped[datetime] = so.mapped_column(default=lambda: datetime.now(timezone.utc))
     due_date: so.Mapped[date] = so.mapped_column(sa.Date)
+    overdue: so.Mapped[bool] = so.mapped_column(sa.Boolean, nullable=False, default=False)
     start_time : so.Mapped[time] = so.mapped_column(sa.Time)
     finish_time : so.Mapped[time] = so.mapped_column(sa.Time)
 
