@@ -1,10 +1,11 @@
 from flask import render_template, request, redirect, url_for, abort, flash, current_app
 from flask import Blueprint
 from flask_login import current_user, login_user,logout_user, login_required
-from .forms import TaskForm, DateSelectorForm
+from .forms import TaskForm, DateSelectorForm, EditTaskForm
 from .models import Task
-from app.extensions import db
+from app.extensions import db, mail
 from datetime import datetime
+
 
 views = Blueprint('views', __name__)
 
@@ -102,3 +103,17 @@ def delete_task(id):
     db.session.delete(task)
     db.session.commit()
     return redirect(url_for('views.tasks'))
+
+@views.route('/task/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_task(id):
+    task = Task.query.get_or_404(id)
+    form = EditTaskForm(obj=task)
+    if form.validate_on_submit():
+        form.populate_obj(task)
+        db.session.commit()
+        flash('Task edited', 'success')
+        return redirect(url_for('views.tasks'))
+    return render_template('edit_task.html', form=form, task=task, title="Edit Task")
+
+

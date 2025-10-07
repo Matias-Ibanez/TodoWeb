@@ -1,35 +1,7 @@
 {% extends 'base.html' %}
 
 {% block extra_head %}
-<style>
-  html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-  }
-
-  body {
-    background-image: linear-gradient(300deg, #ff9800, #f57c00, #e65100);
-    background-size: 300% 300%;
-    background-position: 0% 50%;
-    animation: gradient-animation 18s ease infinite;
-
-    text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .3);
-    box-shadow: none;
-  }
-
-  @keyframes gradient-animation {
-    0% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-    100% {
-      background-position: 0% 50%;
-    }
-  }
-</style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
 {% endblock %}
 
 {% block content %}
