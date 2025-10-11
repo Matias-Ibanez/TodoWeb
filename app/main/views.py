@@ -116,4 +116,13 @@ def edit_task(id):
         return redirect(url_for('views.tasks'))
     return render_template('edit_task.html', form=form, task=task, title="Edit Task")
 
+@views.route('/task/complete/<int:id>', methods=['GET', 'POST'])
+@login_required
+def complete_task(id):
+    task = Task.query.get_or_404(id)
+    task.completed = True
+    db.session.commit()
+    flash('Task completed', 'success')
+    return redirect(url_for('views.tasks'))
+
 
